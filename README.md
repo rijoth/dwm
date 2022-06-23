@@ -2,7 +2,7 @@ My fork of dwm - dynamic window manager
 ============================
 dwm is an extremely fast, small, and dynamic window manager for X11, I used a number of patches in this build to make dwm more productive.
 
-**Note** : I build this fork is based on [gruvbox](https://github.com/morhetz/gruvbox) theme and can matched with my build of [st](https://github.com/rijoth/st).
+**Note** : This fork is based on [gruvbox](https://github.com/morhetz/gruvbox) theme and can matched with my build of [st](https://github.com/rijoth/st).
 
 The patches I added to this build include:
 ============================
