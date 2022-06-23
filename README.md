@@ -6,14 +6,12 @@ dwm is an extremely fast, small, and dynamic window manager for X, I used a numb
 
 The patches I added to this build include:
 ============================
-+ dwm-movestack-6.1.diff (This plugin allows you to move clients around in the stack and swap them with the master.)
++ dwm-pertag-20200914-61bb8b2.diff (his patch keeps layout, mwfact, barpos and nmaster per tag.)
 + dwm-alwayscenter-20200625-f04cac6.diff (All floating windows are centered.)
 + dwm-attachbottom-6.2.diff (New clients attach at the bottom of the stack instead of the top.)
-+ dwm-vanitygaps-20190508-6.2.diff (Adds (inner) gaps between client windows and (outer) gaps between windows and the screen edge.)
-+ dwm-status2d-6.2.diff (Colors and rectangle drawing in DWM status bar.)
-+ dwm-noborder-6.2.diff (Remove the border when there is only one window visible.)
-+ dwm-hide_vacant_tags-6.2.diff (Prevents dwm from drawing tags with no clients.)
++ dwm-hide_vacant_tags-6.3.diff (Prevents dwm from drawing tags with no clients.)
 + dwm-autostart-20200610-cb3f58a.diff (This patch will make dwm run "~/.dwm/autostart_blocking.sh" and "~/.dwm/autostart.sh &" before entering the handler loop.)
++ dwm-systray-6.3.diff (A simple system tray implementation.)
 
 The dependencies for my fork of dwm.
 ===========================
