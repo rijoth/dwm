@@ -6,7 +6,7 @@ dwm is an extremely fast, small, and dynamic window manager for X, I used a numb
 
 The patches I added to this build include:
 ============================
-+ dwm-pertag-20200914-61bb8b2.diff (his patch keeps layout, mwfact, barpos and nmaster per tag.)
++ dwm-pertag-20200914-61bb8b2.diff (This patch keeps layout, mwfact, barpos and nmaster per tag.)
 + dwm-alwayscenter-20200625-f04cac6.diff (All floating windows are centered.)
 + dwm-attachbottom-6.2.diff (New clients attach at the bottom of the stack instead of the top.)
 + dwm-hide_vacant_tags-6.3.diff (Prevents dwm from drawing tags with no clients.)
