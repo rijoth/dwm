@@ -1,9 +1,11 @@
+/* custom dwm fork by Rijo - https://github.com/rijoth/dwm */
+
 /* See LICENSE file for copyright and license details. */
+
 #include <X11/XF86keysym.h>
 
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
-/* modified for systray */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayonleft = 0;   	/* 0: systray in the right corner, >0: systray on left of status text */
@@ -12,13 +14,12 @@ static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display 
 static const int showsystray        = 1;     /* 0 means no systray */
 static const int showbar            = 1;     /* 0 means no bar */
 static const int topbar             = 1;     /* 0 means bottom bar */
-
 /* fonts */
-static const char *fonts[]          = {"Jetbrains Mono:size=9","fontawesome:size=8"};
+static const char *fonts[]          = {"Jetbrains Mono:size=9","fontawesome:size=8","monospace:size=10"};
 static const char dmenufont[]       = "Jetbrains Mono:size=9";
-
+/* colors */
 static const char col_gray1[]       = "#282828";
-static const char col_gray2[]       = "#444444";
+static const char col_gray2[]       = "#32302f";  /* prev #444444 */
 static const char col_gray3[]       = "#ebdbb2";  /* non highlighted text color */
 static const char col_gray4[]       = "#282828"; /* bar font color */
 static const char col_cyan[]        = "#689d6a"; /* frame and title bar color */
@@ -38,13 +39,13 @@ static const Rule rules[] = {
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	/* { "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },*/
 };
 
 /* layout(s) */
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
-static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals (default 1)*/
+static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
 
 static const Layout layouts[] = {
@@ -66,28 +67,17 @@ static const Layout layouts[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-p", "run:", "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
 
-/* browser */
-static const char *firefox[] = { "firefox", NULL };
-
-/* file manager */
-static const char *files[]  = { "thunar", NULL };
-static const char *vifm[] = {"st", "-e", "vifm", NULL};
-
-/* exit/quit prompt */
-static const char *exitcmd[]  = {"/home/rijo/.suckless/scripts/exit_script", NULL };
-
-/* screenshot tool */
-static const char *screenshot[]  = { "flameshot", "gui", NULL };
-
-/* notifications */
-static const char *brightness_notif[] = {"/home/rijo/.suckless/scripts/brightness_notif", NULL };
-
-/* lockscreen */
-static const char *slock[] = { "slock", NULL };
+/* custom commands */
+static const char *firefox[] = { "firefox", NULL }; /* browser */
+/*  static const char *files[]  = { "thunar", NULL }; file manager */
+static const char *vifm[] = {"st", "-e", "vifm", NULL}; /* file manager */
+static const char *exitcmd[]  = {"/home/rijo/.suckless/scripts/exit_script", NULL }; /* exit/quit prompt */
+static const char *screenshot[]  = { "flameshot", "gui", NULL }; /* screenshot tool */
+static const char *brightness_notif[] = {"/home/rijo/.suckless/scripts/brightness_notif", NULL }; /* notifications */
+static const char *slock[] = { "slock", NULL }; /* lockscreen */
 
 /* volume/brightness keys bindings */
 static const char *upvol[]   = { "/usr/bin/pactl", "set-sink-volume", "0", "+1%",     NULL };
@@ -96,7 +86,7 @@ static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "togg
 static const char *brightdown[] = { "light", "-U", "1", NULL };
 static const char *brightup[]   = { "light", "-A", "1", NULL };
 
-static Key keys[] = {
+static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
@@ -130,34 +120,32 @@ static Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
-	/* { MODKEY|ShiftMask,             XK_q,      quit,           {0} }, */
-	{ MODKEY|ShiftMask,             XK_q,        spawn,           {.v = exitcmd } },
-
+	/*{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },*/
 	/* custom key bindings */
 
 	/* volume/brightness keys */
 	{ 0,              XF86XK_AudioLowerVolume, spawn,        {.v = downvol } },
 	{ 0,                     XF86XK_AudioMute, spawn,        {.v = mutevol } },
 	{ 0,              XF86XK_AudioRaiseVolume, spawn,        {.v = upvol   } },
-    { 0,             XF86XK_MonBrightnessDown, spawn,        { .v = brightdown } },
-    { 0,             XF86XK_MonBrightnessDown, spawn,        {.v = brightness_notif } }, 
-    { 0,               XF86XK_MonBrightnessUp, spawn,        { .v = brightup } },
-    { 0,               XF86XK_MonBrightnessUp, spawn,        {.v = brightness_notif } }, 
+        { 0,             XF86XK_MonBrightnessDown, spawn,        { .v = brightdown } },
+        { 0,             XF86XK_MonBrightnessDown, spawn,        {.v = brightness_notif } }, 
+        { 0,               XF86XK_MonBrightnessUp, spawn,        { .v = brightup } },
+        { 0,               XF86XK_MonBrightnessUp, spawn,        {.v = brightness_notif } }, 
 
 	/* Apps Launched with SUPER + ALT + KEY */
 	/* { MODKEY|Mod1Mask,              XK_f,      spawn,          {.v = files } },*/
-    { MODKEY|Mod1Mask,              XK_l,      spawn,          {.v = slock } },
+        { MODKEY|Mod1Mask,              XK_l,      spawn,          {.v = slock } },
 
-	/* Apps Launched with SUPER + WIN + KEY */
+	/* Apps Launched with SUPER + Shift + KEY */
 	{ MODKEY|ShiftMask,             XK_s,      spawn,          {.v = screenshot } },
 	{ MODKEY|ShiftMask,             XK_v,      spawn,          {.v = vifm } },
-    { MODKEY|ShiftMask,             XK_b,      spawn,          {.v = firefox}},
-
+        { MODKEY|ShiftMask,             XK_b,      spawn,          {.v = firefox}},
+	{ MODKEY|ShiftMask,             XK_q,        spawn,           {.v = exitcmd } },
 };
 
 /* button definitions */
 /* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
-static Button buttons[] = {
+static const Button buttons[] = {
 	/* click                event mask      button          function        argument */
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
